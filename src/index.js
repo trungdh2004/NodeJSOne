@@ -18,6 +18,7 @@ app.use(morgan('combined'))
 // static img
 app.use(express.static(path.join(__dirname, 'public')))
 
+//
 
 app.get('/', function (req, res) {
   res.render('home')
