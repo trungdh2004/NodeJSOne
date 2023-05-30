@@ -1,27 +1,36 @@
-const express = require('express')
-const morgan = require('morgan')
-const handlebars = require('express-handlebars')
-const app = express()
-const port = 3000
+const express = require('express');
+const morgan = require('morgan');
+const handlebars = require('express-handlebars');
+const app = express();
+const port = 3000;
 var path = require('path');
+// require module file render
+
+const route = require('./routes');
 
 // template engine
-app.engine('hbs', handlebars.engine({
-  extname:'.hbs'
-}));
+app.engine(
+    'hbs',
+    handlebars.engine({
+        extname: '.hbs',
+    }),
+);
 app.set('view engine', 'hbs');
-app.set('views',  path.join(__dirname, 'resources/views'));
+app.set('views', path.join(__dirname, 'resources/views'));
 
 // morgan
-app.use(morgan('combined'))
+app.use(morgan('combined'));
 
 // static img
-app.use(express.static(path.join(__dirname, 'public')))
-
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
+app.use(
+    express.urlencoded({
+        extended: true,
+    }),
+);
 //
 
-app.get('/', function (req, res) {
-  res.render('home')
-})
+route(app);
 
-app.listen(port, () => console.log(`http://localhost:${port}`))
+app.listen(port, () => console.log(`http://localhost:${port}`));
