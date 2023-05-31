@@ -7,6 +7,11 @@ var path = require('path');
 // require module file render
 
 const route = require('./routes');
+const db = require('./config/db')
+
+
+// mongoose db
+db.connect()
 
 // template engine
 app.engine(

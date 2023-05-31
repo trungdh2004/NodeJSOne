@@ -4,24 +4,25 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "betifu":"lint-staged",
+    "betifu": "lint-staged",
     "watch": "node-sass --watch src/resources/scss/ -o src/public/css/",
     "start": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
-  "lint-staged":{
-    "src/**/*.{js,json,scss}" : "prettier --single-quote --trailing-comma all --tab-width 4 --write"
+  "lint-staged": {
+    "src/**/*.{js,json,scss}": "prettier --single-quote --trailing-comma all --tab-width 4 --write"
   },
   "dependencies": {
-    "express": "^4.18.2",
     "express-handlebars": "^7.0.7",
+    "mongoose": "^7.2.2",
     "morgan": "^1.10.0",
     "node-sass": "^9.0.0",
     "sass": "^1.62.1"
   },
   "devDependencies": {
+    "express": "^4.18.2",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.2",
     "nodemon": "^2.0.22",
