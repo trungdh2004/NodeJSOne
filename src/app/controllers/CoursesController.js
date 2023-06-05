@@ -57,7 +57,7 @@ class CoursesController {
 
     restore(req, res, next) {
         Courses.restore({_id:req.params.id})
-            .then(() => res.redirect('/me/stored/courses') )
+            .then(() => res.redirect('/me/trash/courses') )
             .catch(next)
     }
     // [DELETE] courses/:id/force
@@ -66,6 +66,18 @@ class CoursesController {
         Courses.deleteOne({_id:req.params.id})
             .then(courses => res.redirect('/me/trash/courses') )
             .catch(next)
+    }
+
+    handelsformaction(req, res, next) {
+        switch(req.body.action){
+            case 'delete':
+                Courses.delete({_id: {$in: req.body.couressIds}})
+                    .then(courses => res.redirect('/me/stored/courses') )
+                    .catch(next)
+                break;
+            default: res.json('message not defaule')
+        }
+        
     }
 }
 

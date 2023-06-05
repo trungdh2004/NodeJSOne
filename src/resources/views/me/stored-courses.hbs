@@ -1,11 +1,26 @@
-<div class="mt-4 container">
+<form name="container-form" method="POST" class="mt-4 container" action="/courses/handle-form-action">
     <div class="">
       <h3>Khóa học của tôi</h3>
       <a href="/me/trash/courses">Thùng rác : {{deleted}}</a>
     </div>
+    <div class="mt-4 d-flex align-item-center">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="checkbox-all">
+        <label class="form-check-label" for="checkbox-all">
+          Chọn tất cả
+        </label>
+      </div>
+      <select class=" form-select-sm " id="select-all-checkbox" aria-label=".form-select-sm example" name="action" required >
+        <option value="">--- Chọn hành động ---</option>
+        <option value="delete">xóa</option>
+        <option value="post">Thêm</option>
+      </select>
+      <button type="submit" class="btn btn-primary btn-sm btn-delete-checkbox-all" disabled >Thực hiện</button>
+    </div>
     <table class="table mt-4">
         <thead>
             <tr>
+                <th></th>
                 <th scope="col">STT</th>
                 <th scope="col">Tên</th>
                 <th scope="col">Trình độ</th>
@@ -18,6 +33,12 @@
             {{#each courses}}
                 
                 <tr>
+                    <td>
+                      <div class="form-check">
+                        <input name="couressIds[]" class="form-check-input" type="checkbox" value="{{this._id}}">
+                        
+                      </div>
+                    </td>
                     <th scope="row">{{sum @index 1}}</th>
                     <td>{{this.name}}</td>
                     <td>{{this.level}}</td>
@@ -35,7 +56,7 @@
             {{/each}}
         </tbody>
     </table>
-</div>
+</form>
 
 
 {{!-- confirm delete courses --}}
@@ -68,22 +89,68 @@
     
 
 <script>
-  var btnID;
-  var deleteForm=document.forms['delete-courses-form']
 
-  const exampleModal = document.getElementById('delete-courses-modal')
-    if (exampleModal) {
-      exampleModal.addEventListener('show.bs.modal', event => {
-        const button = event.relatedTarget
-        btnID = button.getAttribute('data-id')
+
+  document.addEventListener('DOMContentLoaded', function() {
+
+    var btnID;
+    var containerForm = document.querySelector('form[name="container-form"]')
+    var deleteForm=document.forms['delete-courses-form']
+    var checkboxAll = document.querySelector('#checkbox-all')
+    var courseItemCheckbox = document.querySelectorAll('input[name="couressIds[]"]')
+    var btnDeleteCheckboxAll = document.querySelectorAll('.btn-delete-checkbox-all')
+    var selectHandle = document.querySelector('#select-all-checkbox')
+    
+    //modal delete courses
+    const exampleModal = document.getElementById('delete-courses-modal')
+      if (exampleModal) {
+        exampleModal.addEventListener('show.bs.modal', event => {
+          const button = event.relatedTarget
+          btnID = button.getAttribute('data-id')
+        })
+      }
+    //form delete courses
+    var btnDeleteCourses = document.getElementById('btn-delete-courses')
+    btnDeleteCourses.addEventListener('click', () => {
+      deleteForm.action=`/courses/${btnID}?_method=DELETE`
+      deleteForm.submit()
+    })
+
+    //checkbox all courses
+    checkboxAll.addEventListener('change',(e) => {
+      var isCheckedAll = e.target.checked
+        courseItemCheckbox.forEach(item => item.checked = isCheckedAll)
+        renderCheckAllSubmitBtn(isCheckedAll)
       })
-    }
-  
-  var btnDeleteCourses = document.getElementById('btn-delete-courses')
-  btnDeleteCourses.addEventListener('click', () => {
-    deleteForm.action=`/courses/${btnID}?_method=DELETE`
-    deleteForm.submit()
-  })
 
+    //courseItemcheckbox checked
+    courseItemCheckbox.forEach( item => {
+
+      item.addEventListener('change',(e) => {
+        var isCheckedAll = courseItemCheckbox.length === document.querySelectorAll('input[name="couressIds[]"]:checked').length
+        checkboxAll.checked = isCheckedAll
+        console.log('hihi')
+        renderCheckAllSubmitBtn()
+      })
+    })
+    selectHandle.addEventListener('change',(e) => {
+      renderCheckAllSubmitBtn()
+    })
+    
+
+
+    function renderCheckAllSubmitBtn(e) {
+      var isCheckedAll =document.querySelectorAll('input[name="couressIds[]"]:checked').length
+
+      if(isCheckedAll > 0 && selectHandle.value != "") { 
+        btnDeleteCheckboxAll[0].removeAttribute('disabled')
+      }else {
+        btnDeleteCheckboxAll[0].setAttribute('disabled','true')
+      }
+      
+    } 
+
+
+  })
 
 </script>

@@ -3,7 +3,7 @@ const router = express.Router();
 const CoursesController = require('../app/controllers/CoursesController');
 
 // newsController.index
-
+router.post('/handle-form-action',CoursesController.handelsformaction)
 router.get('/create', CoursesController.create);
 router.delete('/:id', CoursesController.destroy);
 router.delete('/:id/force', CoursesController.forceDestroy);
