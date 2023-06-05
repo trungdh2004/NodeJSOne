@@ -9,15 +9,17 @@ class meController {
     
     storedCourses(req,res,next) {
         
-        Courses.find()
-            .then((courses) => {
+        Promise.all([Courses.find(),Courses.countDocumentsDeleted()])
+            .then(([courses,deleted]) => {
                 res.render('me/stored-courses',{
+                    deleted:deleted,
                     courses:mutipleMongoosetoObject(courses)
                     
                 })
             })
-            .catch(next)
+            .catch(next);
 
+        
     }
     trashCourses(req, res, next) {
         Courses.findDeleted()
